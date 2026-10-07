@@ -55,3 +55,7 @@ The test starts and stops its own static server. Set `CHROMIUM_PATH` to use an e
 ## Camera guides
 
 `src/data/cameras.json` stores camera-specific descriptions and FAQs. `src/pages/[camera].astro` generates the three guides with distinct CC0 image pairs, sample-specific planning tables and calculator defaults. Adding a guide requires its own measured sample and editorial record. No generic placeholder camera pages are generated. Browser checks verify each guide’s sample, initial camera, reset state and mobile overflow, plus failed-image recovery.
+
+## Reliability update
+
+Failed WebP requests now fall back to JPEG both on initial display and when switching cameras. Storage estimates allocate drives separately per local copy, including the original; a 294 GB year with two local copies therefore needs two new 2 TB drives under the default assumptions. Existing computer space is not deducted. Numeric overflow is rejected. Tests cover separate-copy rounding, WebP failures, retries and no-JavaScript defaults.

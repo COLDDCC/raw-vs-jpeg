@@ -17,6 +17,16 @@ const {sampleId}=Astro.props;const list=sampleId?samples.filter(s=>s.id===sample
   const stage = root.querySelector('.image-stage') as HTMLElement;
   const status = root.querySelector('.comparison-status')!;
   let selected = samples[0], request = 0;
+  root.querySelectorAll('picture img').forEach(element => {
+   const img = element as HTMLImageElement;
+   const fallback = () => {
+    const source = img.parentElement!.querySelector('source')!;
+    if (source.srcset) { source.srcset = ''; }
+    else { status.textContent = 'Could not load this sample. Select this camera to retry.'; }
+   };
+   img.addEventListener('error', fallback);
+   if (img.complete && img.naturalWidth === 0) fallback();
+  });
   function update() {
    stage.style.setProperty('--split', range.value + '%');
    stage.dataset.view = range.value === '100' ? 'jpeg' : range.value === '0' ? 'raw' : 'split';
@@ -39,19 +49,19 @@ const {sampleId}=Astro.props;const list=sampleId?samples.filter(s=>s.id===sample
   });
   root.querySelectorAll('button[data-id]').forEach(button => button.addEventListener('click', async () => {
    const s = samples.find((sample: any) => sample.id === Number(button.getAttribute('data-id')));
-   if (s.id === selected.id) { request++; root.removeAttribute('aria-busy'); status.textContent = 'Drag to compare · arrow keys also work'; return; }
+   if (s.id === selected.id && Array.from(root.querySelectorAll('picture img')).every(img => (img as HTMLImageElement).complete && (img as HTMLImageElement).naturalWidth > 0)) { request++; root.removeAttribute('aria-busy'); status.textContent = 'Drag to compare · arrow keys also work'; return; }
    const current = ++request;
    root.setAttribute('aria-busy', 'true'); status.textContent = 'Loading camera sample…';
    try {
-    await Promise.all(['raw', 'jpeg'].map(type => new Promise<void>((resolve, reject) => {
-     const image = new Image(); image.onload = () => resolve();
-     image.onerror = () => { image.onerror = () => reject(new Error('Image unavailable')); image.src = `/images/${s.id}-${type}.jpg`; };
+    const loaded = await Promise.all(['raw', 'jpeg'].map(type => new Promise<{type: string, webp: boolean}>((resolve, reject) => {
+     const image = new Image(); let webp = true; image.onload = () => resolve({type, webp});
+     image.onerror = () => { webp = false; image.onerror = () => reject(new Error('Image unavailable')); image.src = `/images/${s.id}-${type}.jpg`; };
      image.src = `/images/${s.id}-${type}.webp`;
     })));
     if (current !== request) return;
-    ['raw', 'jpeg'].forEach(type => {
+    loaded.forEach(({type, webp}) => {
      const picture = root.querySelector('.' + type + '-picture')!;
-     picture.querySelector('source')!.srcset = `/images/${s.id}-${type}.webp`;
+     picture.querySelector('source')!.srcset = webp ? `/images/${s.id}-${type}.webp` : '';
      const img = picture.querySelector('img')!; img.src = `/images/${s.id}-${type}.jpg`;
      img.alt = `${type === 'raw' ? 'Developed RAW export' : 'Embedded JPEG preview'} from ${s.brand} ${s.model}`;
     });

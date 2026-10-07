@@ -12,6 +12,7 @@ try {
 const page=await browser.newPage({viewport:{width:1440,height:1000}});const errors=[];page.on('pageerror',e=>errors.push(e.message));
 await page.goto(baseURL+'/');await page.waitForFunction(()=>document.querySelector('#annual')?.textContent!=='—');
 assert.equal(await page.locator('#annual').textContent(),'294');
+assert.equal(await page.locator('#drives').textContent(),'2 · $160.00');
 await page.locator('input[value="both"]').check();assert.equal(await page.locator('#annual').textContent(),'374');
 await page.locator('input[name="photos"]').fill('0');assert.equal(await page.locator('#drives').textContent(),'0 · $0.00');
 await page.getByRole('button',{name:'Reset assumptions'}).click();await page.waitForTimeout(100);assert.equal(await page.locator('#annual').textContent(),'294');
@@ -53,6 +54,21 @@ for(const [slug,id,annual] of [['canon-r6-mark-ii',6402,'294'],['sony-a7-iii',24
  await page.waitForFunction(()=>[...document.querySelectorAll('img')].every(i=>i.complete&&i.naturalWidth>0));
 }
 assert.equal((await page.goto(baseURL+'/methodology/')).status(),200);
-assert.deepEqual(errors,[]);console.log('Browser checks passed: calculator, reset, camera switching, keyboard slider, images, 320/390px layout, 5 routes, image failure/retry, per-camera defaults/reset, full frame, format views, camera handoff, invalid estimates.');
+await page.route('**/images/*.webp',route=>route.abort());
+await page.goto(baseURL+'/');
+await page.waitForFunction(()=>[...document.querySelectorAll('img')].every(i=>i.complete&&i.naturalWidth>0));
+assert.equal(await page.locator('.raw-picture source').getAttribute('srcset'),'');
+await page.getByRole('button',{name:'Sony A7 III',exact:true}).click();
+await page.waitForFunction(()=>document.querySelector('.raw-picture img').getAttribute('src').includes('2414'));
+await page.waitForFunction(()=>[...document.querySelectorAll('img')].every(i=>i.complete&&i.naturalWidth>0));
+assert.equal(await page.locator('.raw-picture source').getAttribute('srcset'),'');
+assert.equal(await page.locator('.jpeg-picture source').getAttribute('srcset'),'');
+await page.unroute('**/images/*.webp');
+const noJS=await browser.newContext({javaScriptEnabled:false});
+const staticPage=await noJS.newPage();await staticPage.goto(baseURL+'/');
+assert.equal(await staticPage.locator('#annual').textContent(),'294');
+assert.equal(await staticPage.locator('#drives').textContent(),'2 · $160.00');
+// Close both contexts together with the browser (compatible with single-process Chromium).
+assert.deepEqual(errors,[]);console.log('Browser checks passed: calculator, reset, camera switching, keyboard slider, images, 320/390px layout, 5 routes, image failure/retry, per-camera defaults/reset, initial/switch JPEG fallback, no-JS results, separate drive costs, full frame, format views, camera handoff, invalid estimates.');
 
 } finally { await browser.close(); await new Promise(resolve=>server.close(resolve)); }
