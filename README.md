@@ -1,6 +1,6 @@
 # RAW vs JPEG — MVP
 
-English photography tool: three CC0 sample comparisons, an editable storage calculator, one Canon R6 Mark II field-notes page and an open methodology page. Astro static output; native CSS/JS slider. No uploads, accounts, ads or affiliates.
+English photography tool: three CC0 sample comparisons, an editable storage calculator, three camera field-notes pages (Canon R6 Mark II, Sony A7 III and Nikon D750) and an open methodology page. Astro static output; native CSS/JS slider. No uploads, accounts, ads or affiliates.
 
 ## Run
 
@@ -38,7 +38,7 @@ Acquire controlled same-capture RAW + full-resolution camera JPEG pairs for reco
 
 ![Desktop MVP](docs/desktop.jpg)
 
-Browser checks covered camera switching, keyboard slider, calculator/reset, image loading, three routes and overflow at 320/390px.
+Browser checks covered camera switching, keyboard slider, calculator/reset, image loading, five routes and overflow at 320/390px.
 
 ## Usability update
 
@@ -51,3 +51,7 @@ node tests/browser.mjs
 ```
 
 The test starts and stops its own static server. Set `CHROMIUM_PATH` to use an existing Chromium binary if necessary.
+
+## Camera guides
+
+`src/data/cameras.json` stores camera-specific descriptions and FAQs. `src/pages/[camera].astro` generates the three guides with distinct CC0 image pairs, sample-specific planning tables and calculator defaults. Adding a guide requires its own measured sample and editorial record. No generic placeholder camera pages are generated. Browser checks verify each guide’s sample, initial camera, reset state and mobile overflow, plus failed-image recovery.

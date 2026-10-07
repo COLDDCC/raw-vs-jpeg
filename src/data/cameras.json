@@ -1,0 +1,41 @@
+[
+  {
+    "sampleId": 6402,
+    "name": "Canon EOS R6 Mark II",
+    "shortName": "EOS R6 Mark II",
+    "modeLabel": "Full-frame RAW · CR3",
+    "intro": "Plan around a full-frame CR3 capture, then adjust the calculator to match your own files.",
+    "note": "This sample is labeled normal RAW, full frame. It should not stand in for C-RAW, cropped captures or Dual Pixel RAW. Keep the compression mode consistent when checking your own recent photographs.",
+    "questions": [
+      {"question":"Does this example use C-RAW?", "answer":"No. The source labels it normal RAW, full frame. Its measured size applies to this file, not to C-RAW or Dual Pixel RAW."},
+      {"question":"Can I use this size for cropped R6 Mark II files?", "answer":"Treat it as a full-frame reference. For cropped captures, replace the RAW size with a measurement from the same mode you actually use."},
+      {"question":"What does the Canon JPEG side show?", "answer":"It shows the embedded camera preview from this CR3 file. It is not an independently saved full-resolution JPEG. The right side is a developed RAW export; both processing paths are disclosed in our method."}
+    ]
+  },
+  {
+    "sampleId": 2414,
+    "name": "Sony A7 III",
+    "shortName": "A7 III",
+    "modeLabel": "14-bit compressed RAW · ARW",
+    "intro": "Explore a compressed ARW sample and estimate the space your A7 III workflow needs.",
+    "note": "The archive identifies this camera as ILCE-7M3 and this capture as 14-bit compressed RAW. Use this measured file as a compressed-mode reference, not a size estimate for an uncompressed workflow.",
+    "questions": [
+      {"question":"Why does the source say ILCE-7M3?", "answer":"ILCE-7M3 is the model identifier used in the archive for this A7 III sample. The source record and checksum remain available so you can verify the exact file."},
+      {"question":"Does the calculator use uncompressed ARW sizes?", "answer":"No. The default comes from this compressed ARW file. If you save uncompressed RAW, enter the size of a representative file from that workflow."},
+      {"question":"Is the Sony preview suitable for comparing full-resolution detail?", "answer":"No. This sample has an embedded preview that is smaller than the decoded RAW image. The slider is useful for comparing renderings, while a controlled sharpness test needs a separate full-resolution JPEG."}
+    ]
+  },
+  {
+    "sampleId": 898,
+    "name": "Nikon D750",
+    "shortName": "D750",
+    "modeLabel": "14-bit lossless compressed RAW · NEF",
+    "intro": "Start with a lossless compressed NEF sample and build a storage estimate for your D750 files.",
+    "note": "The original archive record identifies this sample as 14-bit lossless compressed NEF. A different bit depth or compression mode needs its own file-size measurement. Do not assume every D750 RAW photograph occupies the same space.",
+    "questions": [
+      {"question":"Which NEF setting does this sample represent?", "answer":"The archive identifies it as 14-bit lossless compressed RAW. Its exact byte count is recorded in the source manifest."},
+      {"question":"Should I use this estimate for 12-bit NEF files?", "answer":"Use your own 12-bit file measurement instead. This page is based on one 14-bit sample; it does not measure the storage difference between bit-depth settings."},
+      {"question":"Why is a border removed from the Nikon RAW export?", "answer":"The preprocessing recipe removes an 8-pixel border from each side of the decoded sensor image to match the camera preview framing. No scene content is added or generated."}
+    ]
+  }
+]

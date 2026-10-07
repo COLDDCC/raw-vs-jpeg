@@ -30,7 +30,29 @@ assert.equal(await page.evaluate(()=>/[\u3400-\u9fff]/.test(document.body.innerT
 await page.screenshot({path:'/tmp/raw-vs-jpeg-desktop.png',fullPage:true});
 for(const width of [390,320]){await page.setViewportSize({width,height:844});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);}
 await page.setViewportSize({width:390,height:844});await page.screenshot({path:'/tmp/raw-vs-jpeg-mobile.png',fullPage:true});
-for(const path of ['/canon-r6-mark-ii-raw-vs-jpeg/','/methodology/']){const response=await page.goto(baseURL+path);assert.equal(response.status(),200);}
-assert.deepEqual(errors,[]);console.log('Browser checks passed: calculator, reset, camera switching, keyboard slider, images, 320/390px layout, 3 routes, full frame, format views, camera handoff, invalid estimates.');
+await page.goto(baseURL+'/');
+await page.route('**/images/898-*', route=>route.abort());
+await page.getByRole('button',{name:'Nikon D750',exact:true}).click();
+await page.waitForFunction(()=>document.querySelector('.comparison-status').textContent.includes('Could not load'));
+assert.match(await page.locator('.raw-picture img').getAttribute('src'),/6402/);
+assert.equal(await page.locator('.comparison').getAttribute('aria-busy'),null);
+await page.unroute('**/images/898-*');
+await page.getByRole('button',{name:'Nikon D750',exact:true}).click();
+await page.waitForFunction(()=>document.querySelector('.raw-picture img').getAttribute('src').includes('898'));
+for(const [slug,id,annual] of [['canon-r6-mark-ii',6402,'294'],['sony-a7-iii',2414,'256.4'],['nikon-d750',898,'263.4']]){
+ const response=await page.goto(baseURL+'/'+slug+'-raw-vs-jpeg/');assert.equal(response.status(),200);
+ assert.equal(await page.locator('select[name=camera]').inputValue(),String(id));
+ assert.equal(await page.locator('#annual').textContent(),annual);
+ assert.match(await page.locator('.raw-picture img').getAttribute('src'),new RegExp(String(id)));
+ await page.locator('input[name=photos]').fill('500');
+ await page.getByRole('button',{name:'Reset assumptions'}).click();
+ await page.waitForFunction(expected=>document.querySelector('#annual').textContent===expected,annual);
+ assert.equal(await page.locator('select[name=camera]').inputValue(),String(id));
+ assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
+ assert.equal(await page.evaluate(()=>/[\u3400-\u9fff]/.test(document.body.innerText)),false);
+ await page.waitForFunction(()=>[...document.querySelectorAll('img')].every(i=>i.complete&&i.naturalWidth>0));
+}
+assert.equal((await page.goto(baseURL+'/methodology/')).status(),200);
+assert.deepEqual(errors,[]);console.log('Browser checks passed: calculator, reset, camera switching, keyboard slider, images, 320/390px layout, 5 routes, image failure/retry, per-camera defaults/reset, full frame, format views, camera handoff, invalid estimates.');
 
 } finally { await browser.close(); await new Promise(resolve=>server.close(resolve)); }

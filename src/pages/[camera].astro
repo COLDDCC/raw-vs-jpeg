@@ -1,0 +1,22 @@
+---
+import Layout from '../components/Layout.astro';
+import Comparison from '../components/Comparison.astro';
+import Calculator from '../components/Calculator.astro';
+import samples from '../data/samples.json';
+import cameras from '../data/cameras.json';
+import {calculateStorage} from '../data/storage.mjs';
+export function getStaticPaths(){return cameras.map(camera=>({params:{camera:samples.find(s=>s.id===camera.sampleId)!.slug+'-raw-vs-jpeg'},props:{camera}}));}
+const {camera}=Astro.props;
+const sample=samples.find(s=>s.id===camera.sampleId)!;
+const mb=sample.rawBytes/1e6;
+const estimate=(photos:number,format:string)=>calculateStorage({rawMB:mb,jpegMB:8,photos,format,cardGB:128,copies:2,drivePrice:80,driveTB:2,cloudPerTB:60});
+const gb=(value:number)=>value.toLocaleString('en-US',{maximumFractionDigits:1});
+const related=cameras.filter(c=>c.sampleId!==camera.sampleId);
+---
+<Layout title={`${camera.name} RAW vs JPEG — real sample & storage guide`} description={`Compare a real ${camera.name} sample, check its measured RAW size and calculate annual storage for RAW, JPEG or both.`}>
+<section class="hero wrap camera-hero"><a class="breadcrumb" href="/#camera-guides">← All camera guides</a><p class="eyebrow">CAMERA FIELD NOTES / {sample.brand.toUpperCase()}</p><h1>{camera.shortName}.<br/><span>Which files should you keep?</span></h1><div class="hero-bottom"><p>{camera.intro}</p><a class="primary-button" href="#storage">Calculate my storage ↓</a></div><div class="camera-stats"><div><strong>{mb.toFixed(2)} MB</strong><span>One measured RAW sample</span></div><div><strong>{Math.floor(128000/mb).toLocaleString('en-US')}</strong><span>Sample-sized RAW files / 128 GB</span></div><div><strong>{gb(estimate(10000,'raw').annualGB)} GB</strong><span>10,000 sample-sized RAW files</span></div></div><p class="sample-mode">{camera.modeLabel} · <a href={sample.url}>View the CC0 source ↗</a></p></section>
+<Comparison sampleId={camera.sampleId}/>
+<section class="wrap prose compact"><h2>A measured sample, not a camera average.</h2><p>{camera.note}</p><h2>Plan a year of photographs.</h2><p>RAW uses this sample’s exact byte count. JPEG assumes <strong>8 MB per photograph</strong> for planning; replace that estimate in the calculator with your own file size. All values below are decimal GB, before backup copies.</p><div class="table-scroll"><table><caption>Estimated annual photo storage — {camera.name}</caption><thead><tr><th scope="col">Photos / year</th><th scope="col">JPEG (8 MB estimate)</th><th scope="col">RAW (measured sample)</th><th scope="col">RAW + JPEG</th></tr></thead><tbody>{[1000,5000,10000,50000].map(count=><tr><th scope="row">{count.toLocaleString('en-US')}</th>{['jpeg','raw','both'].map(format=><td>{gb(estimate(count,format).annualGB)} GB</td>)}</tr>)}</tbody></table></div><h2>Questions about this sample</h2>{camera.questions.map(q=><details><summary>{q.question}</summary><p>{q.answer}</p></details>)}</section>
+<Calculator sampleId={camera.sampleId}/>
+<section class="wrap related-guides"><p class="eyebrow">MORE CAMERA FIELD NOTES</p><div>{related.map(c=><a href={`/${samples.find(s=>s.id===c.sampleId)!.slug}-raw-vs-jpeg/`}>{c.name} <span>↗</span></a>)}</div></section>
+</Layout>
