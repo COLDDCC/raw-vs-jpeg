@@ -5,9 +5,64 @@ const {single=false}=Astro.props;const list=single?samples.filter(s=>s.id===6402
 <section id="compare" class="wrap compare-section"><div class="section-heading"><div><p class="eyebrow">01 / LOOK CLOSER</p><h2>One capture. Two renderings.</h2></div><p>Drag to compare the camera’s embedded JPEG preview<br class="desktop"/> with a developed RAW export.</p></div>
 <div class="comparison" data-samples={JSON.stringify(list)}>
 <div class="comparison-top"><div class="tabs" role="group" aria-label="Camera sample">{list.map((s,i)=><button type="button" data-id={s.id} aria-pressed={i===0}>{s.model==='ILCE-7M3'?'Sony A7 III':s.brand+' '+s.model.replace('EOS ','')}</button>)}</div><span class="sample-badge">REAL CAPTURE · CC0</span></div>
-<div class="image-stage" style="--split:50%"><picture class="raw-picture"><source srcset={`/images/${first.id}-raw.webp`} type="image/webp"/><img src={`/images/${first.id}-raw.jpg`} width="1200" height="800" alt={`Developed RAW export from ${first.brand} ${first.model}`} fetchpriority="high"/></picture><picture class="jpeg-picture"><source srcset={`/images/${first.id}-jpeg.webp`} type="image/webp"/><img src={`/images/${first.id}-jpeg.jpg`} width="1200" height="800" alt={`Embedded JPEG preview from ${first.brand} ${first.model}`}/></picture><span class="image-label left">CAMERA JPEG PREVIEW</span><span class="image-label right">DEVELOPED RAW</span><div class="split-line"><span>↔</span></div><input class="comparison-range" type="range" min="0" max="100" value="50" aria-label="JPEG preview coverage" aria-valuetext="50 percent JPEG preview"/></div>
-<div class="comparison-bottom"><span class="sample-caption">{first.brand} {first.model} · {first.mode}</span><span>← Drag the divider →</span><a class="sample-source" href={first.url}>Original RAW ↗</a></div></div>
+<div class="comparison-tools"><div role="group" aria-label="Comparison view"><button type="button" data-position="100" aria-pressed="false">JPEG preview</button><button type="button" data-position="50" aria-pressed="true">Split view</button><button type="button" data-position="0" aria-pressed="false">Developed RAW</button></div><button type="button" class="frame-toggle" aria-pressed="false">Show full frame</button></div><div class="image-stage" style="--split:50%"><picture class="raw-picture"><source srcset={`/images/${first.id}-raw.webp`} type="image/webp"/><img src={`/images/${first.id}-raw.jpg`} width="1200" height="800" alt={`Developed RAW export from ${first.brand} ${first.model}`} fetchpriority="high"/></picture><picture class="jpeg-picture"><source srcset={`/images/${first.id}-jpeg.webp`} type="image/webp"/><img src={`/images/${first.id}-jpeg.jpg`} width="1200" height="800" alt={`Embedded JPEG preview from ${first.brand} ${first.model}`}/></picture><span class="image-label left">CAMERA JPEG PREVIEW</span><span class="image-label right">DEVELOPED RAW</span><div class="split-line"><span>↔</span></div><input class="comparison-range" type="range" min="0" max="100" value="50" aria-label="JPEG preview coverage" aria-valuetext="50 percent JPEG preview"/></div>
+<div class="comparison-bottom"><span class="sample-caption">{first.brand} {first.model} · {first.mode}</span><span class="comparison-status" role="status">Drag to compare · arrow keys also work</span><a class="sample-source" href={first.url}>Original RAW ↗</a></div><a class="sample-calculator-link" href="#storage">Plan storage for this camera ↓</a></div>
 <p class="honesty"><strong>What you’re seeing:</strong> a camera preview versus a RAW developed with camera white balance. Preview resolution and processing differ. This is a rendering comparison, not a controlled test of highlight recovery or format superiority. <a href="/methodology/">See the exact method →</a></p></section>
 <script>
- document.querySelectorAll('.comparison').forEach(root=>{const samples=JSON.parse(root.getAttribute('data-samples')||'[]');const range=root.querySelector('input')!;const stage=root.querySelector('.image-stage') as HTMLElement;function update(){stage.style.setProperty('--split',range.value+'%');range.setAttribute('aria-valuetext',range.value+' percent JPEG preview');}range.addEventListener('input',update);root.querySelectorAll('button[data-id]').forEach(button=>button.addEventListener('click',()=>{const s=samples.find((s:any)=>s.id===Number(button.getAttribute('data-id')));root.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));['raw','jpeg'].forEach(type=>{const picture=root.querySelector('.'+type+'-picture')!;picture.querySelector('source')!.srcset=`/images/${s.id}-${type}.webp`;const img=picture.querySelector('img')!;img.src=`/images/${s.id}-${type}.jpg`;img.alt=`${type==='raw'?'Developed RAW export':'Embedded JPEG preview'} from ${s.brand} ${s.model}`;});root.querySelector('.sample-caption')!.textContent=`${s.brand} ${s.model} · ${s.mode}`;(root.querySelector('.sample-source') as HTMLAnchorElement).href=s.url;range.value='50';update();}));});
+ document.querySelectorAll('.comparison').forEach(root => {
+  const samples = JSON.parse(root.getAttribute('data-samples') || '[]');
+  const range = root.querySelector('.comparison-range') as HTMLInputElement;
+  const stage = root.querySelector('.image-stage') as HTMLElement;
+  const status = root.querySelector('.comparison-status')!;
+  let selected = samples[0], request = 0;
+  function update() {
+   stage.style.setProperty('--split', range.value + '%');
+   stage.dataset.view = range.value === '100' ? 'jpeg' : range.value === '0' ? 'raw' : 'split';
+   range.setAttribute('aria-valuetext', range.value + ' percent JPEG preview');
+   root.querySelectorAll('button[data-position]').forEach(button => button.setAttribute('aria-pressed', String(button.getAttribute('data-position') === range.value)));
+  }
+  range.addEventListener('input', update);
+  root.querySelectorAll('button[data-position]').forEach(button => button.addEventListener('click', () => {
+   range.value = button.getAttribute('data-position')!; update();
+  }));
+  const frame = root.querySelector('.frame-toggle')!;
+  frame.addEventListener('click', () => {
+   const full = frame.getAttribute('aria-pressed') !== 'true';
+   frame.setAttribute('aria-pressed', String(full));
+   frame.textContent = full ? 'Show compact view' : 'Show full frame';
+   stage.classList.toggle('full-frame', full);
+  });
+  root.querySelector('.sample-calculator-link')!.addEventListener('click', () => {
+   document.dispatchEvent(new CustomEvent('select-storage-camera', { detail: selected.id }));
+  });
+  root.querySelectorAll('button[data-id]').forEach(button => button.addEventListener('click', async () => {
+   const s = samples.find((sample: any) => sample.id === Number(button.getAttribute('data-id')));
+   if (s.id === selected.id) { request++; root.removeAttribute('aria-busy'); status.textContent = 'Drag to compare · arrow keys also work'; return; }
+   const current = ++request;
+   root.setAttribute('aria-busy', 'true'); status.textContent = 'Loading camera sample…';
+   try {
+    await Promise.all(['raw', 'jpeg'].map(type => new Promise<void>((resolve, reject) => {
+     const image = new Image(); image.onload = () => resolve();
+     image.onerror = () => { image.onerror = () => reject(new Error('Image unavailable')); image.src = `/images/${s.id}-${type}.jpg`; };
+     image.src = `/images/${s.id}-${type}.webp`;
+    })));
+    if (current !== request) return;
+    ['raw', 'jpeg'].forEach(type => {
+     const picture = root.querySelector('.' + type + '-picture')!;
+     picture.querySelector('source')!.srcset = `/images/${s.id}-${type}.webp`;
+     const img = picture.querySelector('img')!; img.src = `/images/${s.id}-${type}.jpg`;
+     img.alt = `${type === 'raw' ? 'Developed RAW export' : 'Embedded JPEG preview'} from ${s.brand} ${s.model}`;
+    });
+    selected = s;
+    root.querySelectorAll('button[data-id]').forEach(b => b.setAttribute('aria-pressed', String(b === button)));
+    root.querySelector('.sample-caption')!.textContent = `${s.brand} ${s.model} · ${s.mode}`;
+    (root.querySelector('.sample-source') as HTMLAnchorElement).href = s.url;
+    range.value = '50'; update(); status.textContent = 'Drag to compare · arrow keys also work';
+   } catch {
+    if (current === request) status.textContent = 'Could not load this sample. Try again.';
+   } finally {
+    if (current === request) root.removeAttribute('aria-busy');
+   }
+  }));
+ });
 </script>

@@ -39,3 +39,15 @@ Acquire controlled same-capture RAW + full-resolution camera JPEG pairs for reco
 ![Desktop MVP](docs/desktop.jpg)
 
 Browser checks covered camera switching, keyboard slider, calculator/reset, image loading, three routes and overflow at 320/390px.
+
+## Usability update
+
+All visitor-facing copy remains English (US formatting and USD). The comparator now includes full-frame viewing, JPEG/RAW/split controls, preloaded camera switching and a direct handoff to the storage calculator. The calculator compares all formats, provides static default results and clears outdated estimates on invalid input.
+
+Browser verification after building:
+
+```sh
+node tests/browser.mjs
+```
+
+The test starts and stops its own static server. Set `CHROMIUM_PATH` to use an existing Chromium binary if necessary.
