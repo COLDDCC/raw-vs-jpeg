@@ -1,0 +1,11 @@
+RAW vs JPEG MVP — reproducible recipe
+Renderer: rawpy 0.27.1 / LibRaw (0, 22, 1)
+CC0 sources and SHA-256 hashes: /samples.json
+Left: embedded camera JPEG preview extracted without retouching.
+Right: raw.postprocess(use_camera_wb=True, no_auto_bright=True, output_bps=8).
+No exposure, highlight recovery, white-balance correction or denoising demonstration is claimed.
+RAW cropped to the camera active area (Nikon: 8px border removed).
+Both: resized to 1200px wide, same geometry; WebP quality=60, JPEG fallback quality=60.
+The embedded preview is NOT a standalone full-resolution camera JPEG; different rendering,
+preview resolution and processing affect this comparison. It does not establish format superiority.
+Reproduce: pip install -r scripts/requirements.txt; python scripts/prepare_samples.py
