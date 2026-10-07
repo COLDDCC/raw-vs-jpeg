@@ -13,6 +13,17 @@ const page=await browser.newPage({viewport:{width:1440,height:1000}});const erro
 await page.goto(baseURL+'/');await page.waitForFunction(()=>document.querySelector('#annual')?.textContent!=='—');
 assert.equal(await page.locator('#annual').textContent(),'294');
 assert.equal(await page.locator('#drives').textContent(),'2 · $160.00');
+const initialURL=page.url();await page.locator('#storage-form').evaluate(form=>form.requestSubmit());assert.equal(page.url(),initialURL);
+await page.locator('#storage-form details summary').click();
+await page.locator('input[name=cardGB]').fill('0');assert.match(await page.locator('#calc-error').textContent(),/Card capacity/);
+await page.locator('#storage-form details summary').click();
+await page.getByRole('button',{name:'Review invalid input'}).click();
+assert.equal(await page.locator('#storage-form details').evaluate(el=>el.open),true);
+assert.equal(await page.locator('input[name=cardGB]').evaluate(el=>el===document.activeElement),true);
+assert.equal(await page.locator('input[name=cardGB]').getAttribute('aria-invalid'),'true');
+await page.locator('input[name=cardGB]').fill('128');assert.equal(await page.locator('#calc-error').textContent(),'');
+assert.equal(await page.locator('#review-input').isVisible(),false);
+await page.locator('#storage-form details summary').click();
 await page.locator('input[value="both"]').check();assert.equal(await page.locator('#annual').textContent(),'374');
 await page.locator('input[name="photos"]').fill('0');assert.equal(await page.locator('#drives').textContent(),'0 · $0.00');
 await page.getByRole('button',{name:'Reset assumptions'}).click();await page.waitForTimeout(100);assert.equal(await page.locator('#annual').textContent(),'294');
@@ -69,6 +80,6 @@ const staticPage=await noJS.newPage();await staticPage.goto(baseURL+'/');
 assert.equal(await staticPage.locator('#annual').textContent(),'294');
 assert.equal(await staticPage.locator('#drives').textContent(),'2 · $160.00');
 // Close both contexts together with the browser (compatible with single-process Chromium).
-assert.deepEqual(errors,[]);console.log('Browser checks passed: calculator, reset, camera switching, keyboard slider, images, 320/390px layout, 5 routes, image failure/retry, per-camera defaults/reset, initial/switch JPEG fallback, no-JS results, separate drive costs, full frame, format views, camera handoff, invalid estimates.');
+assert.deepEqual(errors,[]);console.log('Browser checks passed: calculator, reset, camera switching, keyboard slider, images, 320/390px layout, 5 routes, image failure/retry, per-camera defaults/reset, initial/switch JPEG fallback, no-JS results, separate drive costs, field-specific errors, hidden-field recovery, form submit guard, full frame, format views, camera handoff, invalid estimates.');
 
 } finally { await browser.close(); await new Promise(resolve=>server.close(resolve)); }

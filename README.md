@@ -68,3 +68,7 @@ node scripts/verify-site.mjs
 ```
 
 Preview builds omit the sitemap and disallow indexing. Production builds use `SITE_URL` to generate six sitemap entries, correct canonical URLs and indexing permissions. Privacy and 404 pages are included.
+
+## Input recovery
+
+Invalid values now identify the field and its allowed range or increment. “Review invalid input” opens advanced settings when necessary and focuses the field. Valid edits clear the error state. The calculator prevents form submission so inputs stay on the page. Drive allocation is visible on touch devices, and source download links show their original file sizes. Release verification checks main headings, descriptions and exact sitemap coverage.

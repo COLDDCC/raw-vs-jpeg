@@ -13,3 +13,5 @@
 @media(max-width:750px){.camera-guide-grid{grid-template-columns:1fr;gap:14px}.camera-guide-grid .guide-card{padding:20px}.related-guides>div{grid-template-columns:1fr}.camera-hero .hero-bottom p{font-size:12px}.table-scroll{border-right:1px solid var(--line)}.table-scroll table{min-width:600px}.table-scroll caption{white-space:normal}}
 
 .footer-links{display:flex;gap:18px;flex-wrap:wrap}@media(max-width:750px){.footer-links{gap:14px;font-size:10px}}
+
+input[aria-invalid=true]{border-color:#a3312f;background:#fff7f3}#review-input{align-self:flex-start;margin-top:10px}#review-input[hidden]{display:none}#drive-breakdown{margin:15px 0 0}
