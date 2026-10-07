@@ -1,2 +1,3 @@
 import { defineConfig } from 'astro/config';
-export default defineConfig({ output: 'static' });
+import { site } from './src/config/site.mjs';
+export default defineConfig({ output: 'static', site, trailingSlash: 'always' });

@@ -13,7 +13,7 @@ npm test
 npm run build
 ```
 
-Deploy to Cloudflare Pages: build `npm run build`, output `dist`. The MVP has no hard-coded domain; add the production domain and canonical/sitemap configuration once assigned.
+Deploy to Cloudflare Pages: build `npm run build`, output `dist`. Set `SITE_URL` to the final HTTPS origin for production canonicals, sitemap and robots. Without it, the build is protected from indexing. See [production setup](docs/deployment.md).
 
 ## Integrity and limitations
 
@@ -32,7 +32,7 @@ See `public/recipe.txt`. First image is eager-loaded; alternate-camera images lo
 
 ## Next milestone
 
-Acquire controlled same-capture RAW + full-resolution camera JPEG pairs for recovery experiments. Add camera pages only with unique samples and useful data. Configure production origin, sitemap and robots once deployment is selected. Run actual mobile-network performance checks before claiming Core Web Vitals targets.
+Acquire controlled same-capture RAW + full-resolution camera JPEG pairs for recovery experiments. Add camera pages only with unique samples and useful data. Set the production origin and verify generated canonicals, sitemap and robots after deployment. Run actual mobile-network performance checks before claiming Core Web Vitals targets.
 
 ## Preview
 
@@ -59,3 +59,12 @@ The test starts and stops its own static server. Set `CHROMIUM_PATH` to use an e
 ## Reliability update
 
 Failed WebP requests now fall back to JPEG both on initial display and when switching cameras. Storage estimates allocate drives separately per local copy, including the original; a 294 GB year with two local copies therefore needs two new 2 TB drives under the default assumptions. Existing computer space is not deducted. Numeric overflow is rejected. Tests cover separate-copy rounding, WebP failures, retries and no-JavaScript defaults.
+
+## Release verification
+
+```sh
+npm run build
+node scripts/verify-site.mjs
+```
+
+Preview builds omit the sitemap and disallow indexing. Production builds use `SITE_URL` to generate six sitemap entries, correct canonical URLs and indexing permissions. Privacy and 404 pages are included.
