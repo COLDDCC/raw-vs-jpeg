@@ -17,7 +17,7 @@ const initial=calculateStorage({rawMB:Number((initialSample.rawBytes/1e6).toFixe
  const inputs = Array.from(form.querySelectorAll('input[type=number]')) as HTMLInputElement[];
  let problemField: HTMLInputElement | undefined;
  const resultIDs = ['drive-breakdown','annual','card-note','backup','drives','cloud','per-photo','jpeg-total','raw-total','both-total'];
- const number = (value: number) => value.toLocaleString('en-US', {maximumFractionDigits: 1});
+ const number = (value: number) => value.toLocaleString(document.documentElement.lang, {maximumFractionDigits: 1});
  function invalid(field?: HTMLInputElement) {
   problemField = field || get('rawMB');
   inputs.forEach(input => input.setAttribute('aria-invalid', String(!input.validity.valid)));
