@@ -11,7 +11,12 @@ for(const file of pages){
  const title=html.match(/<title>(.*?)<\/title>/)[1];assert.ok(!titles.has(title),`Duplicate title: ${title}`);titles.add(title);
  const path=file==='index.html'?'/':file.endsWith('/index.html')?'/'+file.slice(0,-10):'/'+file;
  if(!canIndex||file==='404.html')assert.match(html,/<meta name="robots" content="noindex,follow"/);
- if(canIndex&&!html.includes('content="noindex,follow"'))indexableURLs.add(new URL(path,site).href);
+ if(canIndex&&file!=='404.html'){
+  assert.ok(!html.includes('content="noindex,follow"'),`Production page must allow indexing: ${file}`);
+  assert.ok(!html.includes('localhost:'),`Localhost URL in production: ${file}`);
+  for(const [,href] of html.matchAll(/rel="alternate"[^>]*href="([^"]+)"/g))assert.equal(new URL(href).origin,site,`Incorrect language alternate in ${file}`);
+  indexableURLs.add(new URL(path,site).href);
+ }
  if(site&&file!=='404.html')assert.ok(html.includes(`rel="canonical" href="${new URL(path,site).href}"`),`Incorrect canonical in ${file}`);
  for(const [,href] of html.matchAll(/(?:href|src)="([^"]+)"/g)){
   if(!href.startsWith('/')&&!href.startsWith('#'))continue;

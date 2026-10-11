@@ -13,7 +13,7 @@ npm test
 npm run build
 ```
 
-Deploy to Cloudflare Pages: build `npm run build`, output `dist`. Set `SITE_URL` to the final HTTPS origin for production canonicals, sitemap and robots. Without it, the build is protected from indexing. See [production setup](docs/deployment.md).
+Deploy to Cloudflare Pages: build `npm run build`, output `dist`. The production origin defaults to `https://raw-vs-jpeg.com`; `SITE_URL` can override it. Non-production Cloudflare branches remain protected from indexing. See [production setup](docs/deployment.md).
 
 ## Integrity and limitations
 
@@ -67,7 +67,7 @@ npm run build
 node scripts/verify-site.mjs
 ```
 
-Preview builds omit the sitemap and disallow indexing. Production builds use `SITE_URL` to generate six sitemap entries, correct canonical URLs and indexing permissions. Privacy and 404 pages are included.
+Preview builds omit the sitemap and disallow indexing. Production builds use `SITE_URL` to generate eight sitemap entries, correct canonical URLs and indexing permissions. Privacy and 404 pages are included.
 
 ## Input recovery
 
