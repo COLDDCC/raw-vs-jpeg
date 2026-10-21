@@ -1,5 +1,12 @@
 // Shared by the static-build translation pass and live calculator updates.
 const rows = [
+["RAW vs JPEG: See the Difference & Choose Your Format", "RAW vs JPEG: veja a diferença e escolha seu formato", "RAW vs JPEG : comparez et choisissez votre format"],
+["Compare RAW and JPEG rendering styles, learn when to use each format, and calculate how many photos fit on your memory card.", "Compare os estilos RAW e JPEG, saiba quando usar cada formato e calcule quantas fotos cabem no cartão.", "Comparez les rendus RAW et JPEG, choisissez votre format et calculez combien de photos tient votre carte mémoire."],
+["Compare rendering styles: embedded JPEG preview vs developed RAW. Brightness differences do not prove one format is better.", "Compare estilos de processamento: prévia JPEG incorporada e RAW revelado. Diferenças de brilho não provam que um formato é melhor.", "Comparez les rendus : aperçu JPEG intégré et RAW développé. Une différence de luminosité ne prouve pas la supériorité d’un format."],
+["How many photos fit on your memory card?", "Quantas fotos cabem no seu cartão de memória?", "Combien de photos peut contenir votre carte mémoire ?"],
+["Your card & shooting year", "Seu cartão e ano de fotografia", "Votre carte et année de photographie"],
+["Estimated photos per card", "Estimativa de fotos por cartão", "Nombre estimé de photos par carte"],
+["Approximate counts using decimal GB and your file sizes. Formatting, other files and scene detail can reduce capacity.", "Estimativas com GB decimais e os tamanhos informados. Formatação, outros arquivos e detalhes da cena podem reduzir a capacidade.", "Estimations selon les Go décimaux et vos tailles de fichiers. Le formatage, les autres fichiers et les détails de la scène peuvent réduire la capacité."],
 ['RAW vs JPEG: Interactive Photo Comparison & Storage Calculator','RAW vs JPEG: comparação de fotos e calculadora de armazenamento','RAW vs JPEG : comparateur de photos et calculateur de stockage'],
 ['Compare real CC0 camera samples and estimate photo storage and backup costs.','Compare fotos reais de câmeras e estime o armazenamento e o custo dos backups.','Comparez de vraies photos et estimez le stockage et le coût des sauvegardes.'],
 ['RAW vs JPEG: Compare Photos Side by Side','RAW vs JPEG: compare fotos lado a lado','RAW vs JPEG : comparez les photos côte à côte'],

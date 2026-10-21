@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
 import {canIndex} from '../config/site.mjs';
-const { title='RAW vs JPEG: Interactive Photo Comparison & Storage Calculator',description='Compare real CC0 camera samples and estimate photo storage and backup costs.',noindex=false }=Astro.props;
+const { title='RAW vs JPEG: See the Difference & Choose Your Format',description='Compare RAW and JPEG rendering styles, learn when to use each format, and calculate how many photos fit on your memory card.',noindex=false }=Astro.props;
 const {locale='en',home=false}=Astro.props;
 const homePath=locale==='en'?'/':`/${locale}/`;
 const canonical=Astro.site ? new URL(Astro.url.pathname,Astro.site).href : undefined;

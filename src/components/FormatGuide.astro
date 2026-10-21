@@ -1,0 +1,37 @@
+---
+const content = {
+ en: {
+ title: 'What is the difference between RAW and JPEG?', intro: 'RAW keeps more capture data for editing. JPEG is a processed, compressed image ready to share. RAW + JPEG saves both versions.',
+ headings: ['Feature', 'RAW', 'JPEG'],
+ rows: [
+ ['Editing flexibility', 'More latitude for exposure and white balance adjustments; recovery still has limits.', 'Can be edited, but strong adjustments can reveal artifacts or lost detail.'],
+ ['File size', 'Usually larger; varies with camera, scene and compression mode.', 'Usually smaller; quality settings and scene detail affect size.'],
+ ['Sharing & software', 'Usually needs a compatible editor and export for sharing.', 'Widely supported and ready to share straight from the camera.'],
+ ['Burst shooting', 'Larger files may fill the buffer sooner; check your camera.', 'Smaller files can help sustain longer bursts; camera settings matter.'],
+ ['Best fit', 'Editing, difficult lighting and keeping a flexible original.', 'Fast delivery, simple workflows and little editing.']
+ ],
+ sub: 'Should you shoot RAW, JPEG or both?',
+ choices: [['Planning to edit?', 'Choose RAW for more control over your final image.'], ['Sharing right away?', 'Choose JPEG when a finished image and quick delivery matter most.'], ['Need both?', 'Choose RAW + JPEG for a shareable image plus an editable original; allow more space.']],
+ note: 'A RAW file is not automatically a better-looking photo. The editor, camera settings and processing affect the result. Neither format can recover information that was never captured.', source: 'Further reading: Nikon’s guide to choosing RAW or JPEG.'
+ },
+ 'pt-br': {
+ title: 'Qual é a diferença entre RAW e JPEG?', intro: 'RAW preserva mais dados da captura para edição. JPEG é uma imagem processada e comprimida, pronta para compartilhar. RAW + JPEG salva as duas versões.',
+ headings: ['Característica', 'RAW', 'JPEG'],
+ rows: [['Flexibilidade de edição', 'Mais margem para ajustar exposição e balanço de branco; a recuperação tem limites.', 'Permite edição, mas ajustes fortes podem revelar artefatos ou perda de detalhes.'], ['Tamanho do arquivo', 'Geralmente maior; varia com câmera, cena e compressão.', 'Geralmente menor; depende da qualidade e dos detalhes da cena.'], ['Compartilhamento e software', 'Normalmente exige editor compatível e exportação.', 'Amplamente compatível e pronto para compartilhar.'], ['Disparo contínuo', 'Arquivos maiores podem encher o buffer antes; consulte sua câmera.', 'Arquivos menores podem permitir sequências mais longas; depende da câmera.'], ['Indicado para', 'Edição, luz difícil e preservação de um original flexível.', 'Entrega rápida, fluxo simples e pouca edição.']],
+ sub: 'Fotografar em RAW, JPEG ou ambos?', choices: [['Vai editar?', 'Escolha RAW para ter mais controle sobre a imagem final.'], ['Vai compartilhar agora?', 'Escolha JPEG para uma imagem pronta e entrega rápida.'], ['Precisa dos dois?', 'RAW + JPEG oferece imagem pronta e original editável; reserve mais espaço.']],
+ note: 'RAW não fica automaticamente mais bonito. O editor, os ajustes da câmera e o processamento afetam o resultado. Nenhum formato recupera informações que não foram capturadas.', source: 'Saiba mais: guia da Nikon sobre RAW e JPEG (em inglês).'
+ },
+ fr: {
+ title: 'Quelle est la différence entre RAW et JPEG ?', intro: 'Le RAW conserve davantage de données pour la retouche. Le JPEG est une image traitée et compressée, prête à partager. RAW + JPEG enregistre les deux versions.', headings: ['Critère', 'RAW', 'JPEG'],
+ rows: [['Latitude de retouche', 'Plus de latitude pour ajuster exposition et balance des blancs ; la récupération a des limites.', 'Retouchable, mais les ajustements forts peuvent révéler des artefacts ou des détails perdus.'], ['Taille des fichiers', 'Généralement plus volumineux ; dépend de l’appareil, de la scène et de la compression.', 'Généralement plus petit ; dépend de la qualité et des détails de la scène.'], ['Partage et logiciels', 'Nécessite généralement un logiciel compatible et un export.', 'Largement compatible et prêt à partager.'], ['Prise de vue en rafale', 'Les fichiers plus volumineux peuvent remplir le tampon plus vite ; vérifiez votre appareil.', 'Les petits fichiers peuvent permettre des rafales plus longues ; cela dépend des réglages.'], ['Usage adapté', 'Retouche, lumière difficile et conservation d’un original flexible.', 'Livraison rapide, flux simple et peu de retouches.']],
+ sub: 'Photographier en RAW, JPEG ou les deux ?', choices: [['Vous retouchez ?', 'Choisissez le RAW pour mieux maîtriser votre image finale.'], ['Vous partagez immédiatement ?', 'Choisissez le JPEG pour une image prête et une livraison rapide.'], ['Besoin des deux ?', 'RAW + JPEG fournit une image prête et un original à retoucher ; prévoyez plus de stockage.']],
+ note: 'Une photo RAW n’est pas automatiquement plus belle. Le logiciel, les réglages et le traitement influencent le résultat. Aucun format ne peut retrouver une information qui n’a pas été capturée.', source: 'Pour approfondir : le guide Nikon sur RAW et JPEG (en anglais).'
+ }
+};
+const c=content[Astro.props.locale as keyof typeof content] || content.en;
+---
+<section class="wrap format-guide" id="format-guide" aria-labelledby="format-heading">
+<h2 id="format-heading">{c.title}</h2><p>{c.intro}</p>
+<div class="table-scroll" role="region" aria-labelledby="format-heading" tabindex="0"><table><thead><tr>{c.headings.map(h=><th scope="col">{h}</th>)}</tr></thead><tbody>{c.rows.map(row=><tr><th scope="row">{row[0]}</th><td>{row[1]}</td><td>{row[2]}</td></tr>)}</tbody></table></div>
+<h3>{c.sub}</h3><div class="scenario-grid">{c.choices.map(choice=><article><h4>{choice[0]}</h4><p>{choice[1]}</p></article>)}</div><p class="input-note">{c.note}</p><a class="guide-source" href="https://www.nikonusa.com/learn-and-explore/c/tips-and-techniques/is-shooting-raw-or-jpeg-better-for-you">{c.source} ↗</a>
+</section>
