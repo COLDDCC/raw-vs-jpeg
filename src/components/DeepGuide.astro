@@ -1,0 +1,40 @@
+---
+import samples from '../data/samples.json';
+import cameras from '../data/cameras.json';
+const faq=[
+['Is RAW better than JPEG?','RAW offers more editing latitude, especially for white balance and difficult lighting. JPEG is often the better choice when speed, compatibility and smaller files are priorities. A properly exposed JPEG can look excellent.'],
+['Should beginners shoot RAW or JPEG?','Start with JPEG if you want to share photos immediately. Choose RAW or RAW + JPEG when you want to practice editing; be prepared to store larger files and use compatible software.'],
+['Can you convert JPEG to RAW?','Renaming or converting a JPEG file to a RAW container cannot restore the original sensor measurements or lost tonal detail. You can edit a JPEG, but it does not become the original camera RAW.'],
+['Does RAW always recover overexposed highlights?','No. If the sensor has clipped a highlight, a RAW editor cannot reconstruct the missing measurement. RAW can preserve adjustment latitude when usable highlight information was recorded.'],
+['Can you edit JPEG photos?','Yes. JPEG supports cropping, color and exposure adjustments. Repeated exports and aggressive changes can introduce visible artifacts or reveal detail lost during in-camera processing.'],
+['Does shooting RAW slow down burst photography?','Sometimes. RAW files can consume more buffer and storage bandwidth than JPEG. Actual burst length depends on the camera, bit depth, compression, card speed and shooting settings.'],
+['Do professional photographers use JPEG?','Yes. Many workflows prioritize fast delivery or a consistent in-camera look. RAW remains popular when editing flexibility matters, but the right format depends on the assignment.'],
+['How much space does RAW + JPEG need?','It is the RAW file size plus the separately saved JPEG file size per shot. The ratio varies with camera and compression mode; enter your actual file sizes in the calculator instead of assuming a fixed multiplier.'],
+['Can phones shoot RAW?','Some smartphones offer RAW or computational RAW options. Availability, bit depth and processing vary by phone and app, so their files should not be equated with interchangeable-lens camera RAW files.']
+];
+const myths=[
+['RAW is automatically sharper.','Sharpness depends on focus, optics, sharpening, rendering and output size. A camera JPEG may look sharper immediately because the camera already applied processing.'],
+['JPEG cannot be edited.','JPEG can be edited, but stronger adjustments are more likely to expose compression artifacts or missing tonal information.'],
+['RAW rescues every bad exposure.','RAW is not a substitute for correct exposure. Completely clipped highlights and buried noise still limit recovery.'],
+['A sample RAW size is a camera average.','File size varies by compression mode and scene. Our measurements describe individual original files, not population averages.']
+];
+const scenes=[
+['Landscape & sunsets','RAW is a useful default for complex highlights, color gradients and deliberate post-processing. Keep an eye on clipped skies at capture.'],
+['Weddings & portraits','RAW or RAW + JPEG allows more flexibility with mixed lighting and skin-tone adjustments. Account for a backup strategy and the extra storage.'],
+['Sports & wildlife','Choose the format that meets your camera’s burst and delivery requirements. Test sustained shooting with the same card and settings you will use in the field.'],
+['Travel & family','JPEG keeps a lightweight workflow; RAW + JPEG provides an editable original if you want to revisit favorite photos.'],
+['News & quick delivery','JPEG often wins when the priority is sending finished images fast, subject to the organization’s editing and authenticity requirements.']
+];
+const measured=samples.map(s=>({sample:s,camera:cameras.find(c=>c.sampleId===s.id)!}));
+const schema={"@context":"https://schema.org","@type":"FAQPage",mainEntity:faq.map(([q,a])=>({"@type":"Question",name:q,acceptedAnswer:{"@type":"Answer",text:a}}))};
+---
+<section class="wrap prose deep-guide" aria-label="Photography format guide">
+<h2>When should you shoot RAW, JPEG or both?</h2><p>The best format depends on editing needs and delivery speed. RAW is a good starting point for planned edits or difficult illumination; JPEG is ideal for small, immediately usable files. Choose RAW + JPEG when both benefits justify the storage. You can change formats for different assignments rather than treating one as universally superior.</p>
+<div class="scenario-grid">{scenes.map(([title,answer])=><article><h3>{title}</h3><p>{answer}</p></article>)}</div>
+<h2>RAW vs JPEG: measured file size examples</h2><p>Three original CC0 RAW files give concrete sizes, but each represents one capture and the stated compression mode. JPEG sizes here are <strong>not measured standalone photographs</strong>; the planning calculator starts at an editable 8 MB JPEG assumption.</p>
+<div class="table-scroll"><table><caption>Original RAW source files, decimal megabytes</caption><thead><tr><th>Camera</th><th>Mode</th><th>Measured RAW</th><th>Original</th></tr></thead><tbody>{measured.map(({sample,camera})=><tr><th scope="row"><a href={`/${sample.slug}-raw-vs-jpeg/`}>{camera.name}</a></th><td>{camera.modeLabel}</td><td>{(sample.rawBytes/1e6).toFixed(2)} MB</td><td><a href={sample.url}>CC0 file ↗</a></td></tr>)}</tbody></table></div><p>Explore the complete <a href="/cameras/">camera index</a> or calculate <a href="/memory-card-calculator/">memory-card capacity</a> with your own assumptions.</p>
+<h2>Four common RAW and JPEG myths</h2><div class="fact-stack">{myths.map(([title,answer])=><details><summary>{title}</summary><p>{answer}</p></details>)}</div>
+<h2>Frequently asked questions</h2><div class="fact-stack">{faq.map(([q,a])=><details><summary>{q}</summary><p>{a}</p></details>)}</div>
+<p class="input-note">The comparison slider uses developed RAW exports and embedded JPEG previews, not matched independent JPEG captures. It does not show a controlled exposure-recovery experiment. <a href="/methodology/">Read our methods and source records.</a></p>
+</section>
+<script type="application/ld+json" set:html={JSON.stringify(schema).replace(/</g,'\\u003c')}/>
