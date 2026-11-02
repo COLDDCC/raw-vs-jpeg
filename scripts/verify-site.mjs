@@ -15,6 +15,14 @@ for(const file of pages){
   assert.ok(!html.includes('content="noindex,follow"'),`Production page must allow indexing: ${file}`);
   assert.ok(html.includes('name="twitter:card" content="summary_large_image"'),`Missing large social card: ${file}`);
   assert.ok(html.includes('property="og:image"'),`Missing OG image: ${file}`);
+  const og=html.match(/<meta property="og:image" content="([^"]+)"/)?.[1];
+  assert.ok(og,`Missing OG URL: ${file}`);
+  const imageUrl=new URL(og);assert.equal(imageUrl.origin,site,`External OG image: ${file}`);
+  const imagePath=join('dist',imageUrl.pathname.slice(1));
+  assert.ok(existsSync(imagePath),`OG image file missing: ${file}`);
+  const png=readFileSync(imagePath);assert.equal(png.subarray(1,4).toString(),'PNG',`Invalid PNG: ${file}`);
+  assert.equal(png.readUInt32BE(16),1200,`Wrong OG width: ${file}`);
+  assert.equal(png.readUInt32BE(20),630,`Wrong OG height: ${file}`);
   assert.ok(!html.includes('localhost:'),`Localhost URL in production: ${file}`);
   for(const [,href] of html.matchAll(/rel="alternate"[^>]*href="([^"]+)"/g))assert.equal(new URL(href).origin,site,`Incorrect language alternate in ${file}`);
   indexableURLs.add(new URL(path,site).href);
