@@ -4,7 +4,7 @@ import {canIndex} from '../config/site.mjs';
 const { title='RAW vs JPEG: See the Difference & Choose Your Format',description='Compare RAW and JPEG rendering styles, learn when to use each format, and calculate how many photos fit on your memory card.',noindex=false }=Astro.props;
 const {locale='en',home=false,jsonLD=[]}=Astro.props;
 const isHomeLocale=home;
-const ogFile=Astro.url.pathname==='/'?'home':Astro.url.pathname.replace(/^\\/|\\/$/g,'').replaceAll('/','-');
+const ogFile=Astro.url.pathname==='/'?'home':Astro.url.pathname.split('/').filter(Boolean).join('-');
 const socialImage=Astro.site ? new URL('/og/'+ogFile+'.png',Astro.site).href : undefined;
 const websiteSchema=home && locale==='en' && Astro.site ? {"@context":"https://schema.org","@type":"WebSite",name:"RAW vs JPEG",url:Astro.site.href} : null;
 const homePath=locale==='en'?'/':`/${locale}/`;
