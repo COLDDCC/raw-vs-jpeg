@@ -26,3 +26,6 @@ input[aria-invalid=true]{border-color:#a3312f;background:#fff7f3}#review-input{a
 
 /* Navigation and breadcrumb accessibility: small screens keep locale links visible. */
 .language-picker{gap:5px}.language-picker a{padding:8px 6px;border-radius:3px;font-size:11px;font-weight:700;color:var(--green)}.language-picker a[aria-current=page]{background:#e8ede4}.breadcrumbs{font-size:12px;color:var(--muted);margin-bottom:24px}.breadcrumbs a{color:var(--green);text-decoration:underline}@media(max-width:750px){.header nav{gap:9px}.header nav a:last-of-type{display:inline-block}.header nav>a:nth-of-type(2),.header nav>a:nth-of-type(4){display:none}.language-picker{margin-left:auto}.language-picker a{padding:8px 5px}}
+
+/* Compact mobile camera stats and less cramped navigation, without changing desktop layout. */
+@media(max-width:540px){.camera-stats{grid-template-columns:1fr;gap:0;padding:8px 0;margin-top:24px}.camera-stats>div{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 0;border-bottom:1px solid var(--line)}.camera-stats strong{font-size:23px;white-space:nowrap}.camera-stats span{text-align:right;max-width:58%;margin-top:0}.comparison-top .tabs{width:100%}.comparison-top .tabs button{min-height:40px}.header .language-picker{margin-left:0}}

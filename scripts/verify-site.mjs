@@ -28,6 +28,8 @@ for(const file of pages){
   indexableURLs.add(new URL(path,site).href);
   if(/(?:canon|sony|nikon)-[^/]+-raw-vs-jpeg\/index\.html$/.test(file)){
     assert.ok(html.includes('Estimated photographs by memory card size'),`Missing static capacity table: ${file}`);
+    assert.ok(html.includes('Practical recommendation:'),`Missing camera-specific guidance: ${file}`);
+    assert.ok(html.includes('loading="lazy"'),`Camera comparison should load lazily: ${file}`);
     assert.ok(html.includes('"@type":"BreadcrumbList"'),`Missing breadcrumb schema: ${file}`);
     assert.ok(html.includes('"@type":"FAQPage"'),`Missing matching FAQ schema: ${file}`);
   }
